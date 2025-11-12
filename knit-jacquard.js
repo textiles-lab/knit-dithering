@@ -78,11 +78,11 @@ function addCar(rrggbb, no) {
 //specify where the yarns are currently installed (quoted string is label)
 addCar(0x946136, 5); //"1 brown"
 addCar(0xc23220, 3); //"2 orange"
-addCar(0x9d0031, 2); //"3 magenta"
+addCar(0x9d0031, -1); //"3 magenta"
 addCar(0x964684, -1); //"4 pink"
 addCar(0x836b03, 8); //"5 olive"
 addCar(0x3e5037, 7); //"6 green"
-addCar(0x193a4b, -1); //"7 bluegreen"
+addCar(0x193a4b, 2); //"7 bluegreen"
 addCar(0x5685fd, 9); //"8 lightblue"
 addCar(0x31245d, 10); //"9 purple"
 addCar(0x000000, 1); //"10 black"

@@ -1,0 +1,5 @@
+objs/
+knit-dither
+node_modules/
+package-lock.json
+package.json

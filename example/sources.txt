@@ -1,0 +1,9 @@
+Sources:
+
+- front.png is "Fine Wind, Clear Morning" by Hokusai; public domain (from the Metropolitan Museum of Art)
+- back.png is "The Great Wave off Kanagawa" by Hokusai; public domain (from the Art Institute of Chicago)
+- yarn_measured_rayon_11.png is a set of eleven colors of rayon yarn measured by the paper authors.
+- dithered-front.png and dithered-back.png are the result of co-dithering these two images (5 yarns selected from yarn_measured_ray_11, cross-within of 25, use-within of 9)
+- knit-front.jpg and knit-back.jpg are photographs of the resulting knit.
+
+Both Hokusai images have been scaled to account for the approximate stitch aspect ratio of generalized jacquard knitting (using thin rayon yarns on our lab's 15-guage machine).

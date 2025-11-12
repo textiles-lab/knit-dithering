@@ -28,74 +28,22 @@ objs/error_diffusion.o : src/error_diffusion.cpp src/Color.hpp src/Cost.hpp src/
 	mkdir -p objs
 	$(CPP) -c -o '$@' '$<'
 
+example/dithered-front.png example/dithered-back.png : knit-dither example/front.png example/back.png example/yarn_measured_rayon_11.png
+	./knit-dither \
+		--in-front example/front.png \
+		--in-back example/back.png \
+		--yarns example/yarn_measured_rayon_11.png \
+		--select-yarns 5 \
+		--use-within 9 \
+		--cross-within 24 \
+		--out-front example/dithered-front.png \
+		--out-back example/dithered-back.png
 
-%.dat : %.k ../knitout-backend-swg/knitout-to-dat.js
-	node ../knitout-backend-swg/knitout-to-dat.js '$<' '$@'
+example/knitout.k : example/dithered-front.png example/dithered-back.png
+	./knit-jacquard.js example/dithered-front.png example/dithered-back.png --bindoff > example/knitout.k
 
-result/sizes/%.k : result/sizes/%-f.png result/sizes/%-b.png knit-jacquard.js
-	node knit-jacquard.js 'result/sizes/$*-f.png' 'result/sizes/$*-b.png' --bindoff > '$@'
-
-result/extra/%.k : result/extra/%-f.png result/extra/%-b.png knit-jacquard.js
-	node knit-jacquard.js 'result/extra/$*-f.png' 'result/extra/$*-b.png' --bindoff > '$@'
-
-%.k : %-f.png %-b.png knit-jacquard.js
-	node knit-jacquard.js '$*-f.png' '$*-b.png' > '$@'
-
-
-result-dats : cross-within-dats use-within-dats sizes-dats costs-dats yarns-dats extra-dats
-
-cross-within-dats : \
-	result/cross-within/x0.dat \
-	result/cross-within/x3.dat \
-	result/cross-within/x4.dat \
-	result/cross-within/x5.dat \
-	result/cross-within/x6.dat \
-	result/cross-within/x8.dat \
-	result/cross-within/x12.dat \
-	result/cross-within/x16.dat \
-	result/cross-within/x24.dat \
-	result/cross-within/x32.dat \
-
-use-within-dats : \
-	result/use-within/u0.dat \
-	result/use-within/u5.dat \
-	result/use-within/u6.dat \
-	result/use-within/u7.dat \
-	result/use-within/u8.dat \
-	result/use-within/u9.dat \
-	result/use-within/u10.dat \
-	result/use-within/u11.dat \
-	result/use-within/u12.dat \
-	result/use-within/u13.dat \
-	result/use-within/u14.dat \
-
-sizes-dats : \
-	result/sizes/S-u9.dat \
-	result/sizes/M-u9.dat \
-	result/sizes/L-u9.dat \
-	result/sizes/X-u9.dat \
-
-costs-dats : \
-	result/costs/srgb.dat \
-	result/costs/linear.dat \
-	result/costs/oklab.dat \
-
-yarns-dats : \
-	result/yarns/y1-u9-x24.dat \
-	result/yarns/y2-u9-x24.dat \
-	result/yarns/y3-u9-x24.dat \
-	result/yarns/y4-u9-x24.dat \
-	result/yarns/y5-u9-x24.dat \
-	result/yarns/y6-u9-x24.dat \
-	result/yarns/y7-u9-x24.dat \
-	result/yarns/y8-u9-x24.dat \
-	result/yarns/y9-u9-x24.dat \
-
-extra-dats : \
-	result/extra/penny.dat \
-	result/extra/portrait.dat \
-	result/extra/cm1.dat \
-	result/extra/cm2.dat \
+clean :
+	rm -f knit-dither objs/*.o
 
 #keep intermediates:
 .SECONDARY :
