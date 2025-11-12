@@ -40,7 +40,7 @@ $ ./knit-dither --in-front example/front.png \
 
 Before: ![example/front.png](example/front.png), ![example/back.png](example/back.png)
 
-Dithered: ![example/front-dithered.png](example/front-dithered.png), ![example/back-dithered.png](example/back-dithered.png)
+Dithered: ![example/dithered-front.png](example/dithered-front.png), ![example/dithered-back.png](example/dithered-back.png)
 
 
 The operation of `knit-dither` is controlled by command-line arguments (use `--help` to have the program print this summary).
@@ -81,11 +81,11 @@ To process the co-dithered output files into knitout, you can use the included `
 $ ./knit-jacquard.js example/dithered-front.png example/dithered-back.png --bindoff > example/knitout.k
 ```
 
-After knitting: ![example/knit-front.jpeg](example/knit-front.jpeg), ![example/knit-back.jpeg](example/knit-back.jpeg)
-
 Omit the flag `--bindoff` to skip the bindoff -- saves knitting time, but the result can unravel.
 
 Note that this script uses an internal table to match up pixel colors with carrier indices; look for calls to `addCar`.
+
+Example, after knitting: ![example/knit-front.jpeg](example/knit-front.jpeg), ![example/knit-back.jpeg](example/knit-back.jpeg)
 
 
 ## Feedback
