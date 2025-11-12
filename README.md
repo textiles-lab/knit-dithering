@@ -25,15 +25,23 @@ $ npm install pngjs
 
 The `knit-dither` utility "co-dithers" a pair of input images to produce a pair of quantized output images which obey constraints on the frequency of yarn use and bed crossings.
 
-**Example** -- co-dither `example/hks-sky-M.png` and `example/hks-wave-M.png` using `5` colors selected from `example/yarn_measured_rayon_12.png`:
+**Example** -- co-dither `example/front.png` and `example/back.png` using `5` colors selected from `example/yarn_measured_rayon_11.png`:
 ```
-$ ./knit-dither --in-front example/hks-sky.png \
-		--in-back example/hks-wave.png \
-		--yarns example/yarn_measured_rayon_12.png \
+$ ./knit-dither --in-front example/front.png \
+		--in-back example/back.png \
+		--yarns example/yarn_measured_rayon_11.png \
 		--select-yarns 5 \
-		--out-front example/out-front.png \
-		--out-back example/out-back.png
+		--use-within 9 \
+		--cross-within 24 \
+		--out-front example/dithered-front.png \
+		--out-back example/dithered-back.png
 ```
+(Note that `--use-within` and `--cross-within` are optional, you may tune them or leave them out to get the defaults.)
+
+Before: ![example/front.png](example/front.png), ![example/back.png](example/back.png)
+
+Dithered: ![example/front-dithered.png](example/front-dithered.png), ![example/back-dithered.png](example/back-dithered.png)
+
 
 The operation of `knit-dither` is controlled by command-line arguments (use `--help` to have the program print this summary).
 
@@ -70,12 +78,15 @@ Dithering control: (optional)
 To process the co-dithered output files into knitout, you can use the included `knit-jacquard.js` utility.
 
 ```
-$ ./knit-jacquard.js example-front.png example-back.png --bindoff > example.k
+$ ./knit-jacquard.js example/dithered-front.png example/dithered-back.png --bindoff > example/knitout.k
 ```
+
+After knitting: ![example/knit-front.jpeg](example/knit-front.jpeg), ![example/knit-back.jpeg](example/knit-back.jpeg)
 
 Omit the flag `--bindoff` to skip the bindoff -- saves knitting time, but the result can unravel.
 
 Note that this script uses an internal table to match up pixel colors with carrier indices; look for calls to `addCar`.
+
 
 ## Feedback
 
