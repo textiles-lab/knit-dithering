@@ -40,7 +40,7 @@ $ ./knit-dither --in-front example/front.png \
 
 The input images: ![example/front.png](example/front.png), ![example/back.png](example/back.png)
 
-The ditered output: ![example/dithered-front.png](example/dithered-front.png), ![example/dithered-back.png](example/dithered-back.png)
+The dithered output: ![example/dithered-front.png](example/dithered-front.png), ![example/dithered-back.png](example/dithered-back.png)
 
 
 The operation of `knit-dither` is controlled by command-line arguments (use `--help` to have the program print this summary).
