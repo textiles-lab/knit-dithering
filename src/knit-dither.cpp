@@ -323,7 +323,7 @@ int main(int argc, char **argv) {
 		uint8_t *data_back = stbi_load(in_back_png.c_str(), &width_back, &height_back, &channels_back, 4);
 
 		if (data_back == NULL) {
-			std::cerr << "ERROR: failed to load png from '" << in_front_png << "': " << stbi_failure_reason() << std::endl;
+			std::cerr << "ERROR: failed to load png from '" << in_back_png << "': " << stbi_failure_reason() << std::endl;
 			return 1;
 		}
 
