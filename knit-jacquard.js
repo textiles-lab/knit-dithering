@@ -5,6 +5,7 @@ let bimage = null;
 let do_bindoff = false;
 let usage = false;
 let done_with_options = false;
+let carriers_json = null;
 
 //parse command line options:
 for (let argi = 2; argi < process.argv.length; ++argi) {
@@ -18,6 +19,13 @@ for (let argi = 2; argi < process.argv.length; ++argi) {
     }
   } else if (arg === "--bindoff") {
     do_bindoff = true;
+  } else if (arg === "--carriers") {
+    if (argi + 1 >= process.argv.length) {
+      console.error(`ERROR: --carriers should be followed by a filename.`);
+      usage = true;
+    }
+    carriers_json = process.argv[argi+1];
+	argi += 1;
   } else if (arg === "--") {
     done_with_options = true;
   } else {
@@ -62,32 +70,61 @@ if (fpng.width == !bpng.width || fpng.height == !bpng.height) {
 const Width = fpng.width;
 const Height = fpng.height;
 const YarnRaw = {};
+const YarnLabel = {};
 const YarnCar = {
   /* will add this laaaater. */
 };
 let CarDir = new Map();
 
-function addCar(rrggbb, no) {
+function addCar(rrggbb, no, label) {
   const R = (rrggbb >> 16) & 0xff;
   const G = (rrggbb >> 8) & 0xff;
   const B = (rrggbb >> 0) & 0xff;
   const key = `${R}, ${G}, ${B}`;
   if (key in YarnRaw) throw new Error(`Yarn Color '${key}}' already added.`);
   YarnRaw[key] = no;
+  YarnLabel[key] = label;
 }
-//specify where the yarns are currently installed (quoted string is label)
-addCar(0x946136, 5); //"1 brown"
-addCar(0xc23220, 3); //"2 orange"
-addCar(0x9d0031, -1); //"3 magenta"
-addCar(0x964684, -1); //"4 pink"
-addCar(0x836b03, 8); //"5 olive"
-addCar(0x3e5037, 7); //"6 green"
-addCar(0x193a4b, 2); //"7 bluegreen"
-addCar(0x5685fd, 9); //"8 lightblue"
-addCar(0x31245d, 10); //"9 purple"
-addCar(0x000000, 1); //"10 black"
-addCar(0x9b979e, 4); //"11 gray"
-addCar(0xffffff, 6); //"12 white"
+if (carriers_json !== null) {
+	try {
+		let info = JSON.parse(fs.readFileSync(carriers_json));
+		if (!Array.isArray(info)) {
+			throw new Error("Top-level object is not an array.");
+		}
+		for (let obj of info) {
+			if (typeof obj.color === "undefined") {
+				throw new Error(`Entry is missing 'color'`);
+			}
+			if (typeof obj.color !== "string" || !/^#[0-9A-Fa-f]{6}$/.test(obj.color)) {
+				throw new Error(`Color '${JSON.stringify(obj.color)}' does not appear to be a '#RRGGBB' hex string.`);
+			}
+			if (typeof obj.carrier === "undefined") {
+				throw new Error(`Entry is missing 'carrier'`);
+			}
+			if (typeof obj.carrier !== "number" || Math.round(obj.carrier) !== obj.carrier) {
+				throw new Error(`Carrier '${JSON.stringify(obj.carrier)}' does not appear to be an integer.`);
+			}
+			addCar(parseInt(`0x${obj.color.substr(1)}`), obj.carrier, obj.label);
+		}
+	} catch (e) {
+		console.error(`ERROR: failed to read carrier info from '${carriers_json}'; expecting a json array of objects, each of which has a "color" (#RRGGBB color) and "carrier" (integer) member variable.\nReason: ${e}`);
+		process.exit(1);
+	}
+} else {
+	//specify where the yarns are currently installed (quoted string is label)
+	addCar(0x946136, 5, "1 brown");
+	addCar(0xc23220, 3, "2 orange");
+	addCar(0x9d0031, -1, "3 magenta");
+	addCar(0x964684, -1, "4 pink");
+	addCar(0x836b03, 8, "5 olive");
+	addCar(0x3e5037, 7, "6 green");
+	addCar(0x193a4b, 2, "7 bluegreen");
+	addCar(0x5685fd, 9, "8 lightblue");
+	addCar(0x31245d, 10, "9 purple");
+	addCar(0x000000, 1, "10 black");
+	addCar(0x9b979e, 4, "11 gray");
+	addCar(0xffffff, 6, "12 white");
+}
 
 fPattern = [];
 bPattern = [];
@@ -103,7 +140,7 @@ for (let h = Height - 1; h >= 0; h--) {
     function mapColor(clr) {
       if (!(clr in YarnRaw)) throw new Error(`Missing color ${clr}`);
       if (YarnRaw[clr] === -1)
-        throw new Error(`Color ${clr} is not on the machine; go put it there!`);
+        throw new Error(`Color ${clr} (${YarnLabel[clr]}) is not on the machine; go put it there!`);
       YarnCar[clr] = YarnRaw[clr];
       CarDir.set(YarnCar[clr], "-");
       return YarnCar[clr];
@@ -120,7 +157,15 @@ for (let h = Height - 1; h >= 0; h--) {
 
 const carInUse = Array.from(CarDir.keys());
 carInUse.sort((a, b) => a - b);
-// console.log(carInUse);
+{ //helpful info:
+	let message = ["Yarns used:"];
+	for (let clr of Object.keys(YarnLabel)) {
+		if (CarDir.has(YarnCar[clr])) {
+			message.push(`  ${YarnLabel[clr]} on ${YarnRaw[clr]}`);
+		}
+	}
+	process.stderr.write(message.join("\n") + "\n");
+}
 
 console.log("x-sub-roller-number 3");
 caston();
