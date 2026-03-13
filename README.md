@@ -2,7 +2,7 @@
 
 This repository contains our implementation of [*Co-Dithering for Jacquard Knitting*](https://textiles-lab.github.io/publications/2025-knit-dithering/). The latest version of these materials is available at https://github.com/textiles-lab/knit-dithering .
 
-LICENSE: Copyright © 2025 James McCann (jmccann@cs.cmu.edu) and Yue Xu (yuex1@uw.edu). You are free to use this code for research, hobby, and other non-commercial purposes; as long as attribution is given. For a commercial use license, please contact the authors.
+LICENSE: Copyright © 2025 James McCann (jmccann@cs.cmu.edu) and Yue Xu (yuex1@uw.edu). You are free to use this code for research, hobby, and other non-commercial purposes; as long as attribution is given. For a commercial use license, please contact the authors. This work is not licensed for use with or in support of machine learning ("AI") projects; including as example data or as a generator for example data.
 
 ## Setup
 
